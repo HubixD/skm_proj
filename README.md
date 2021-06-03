@@ -1,2 +1,2 @@
 # skm_proj
-skm project
+skm project. Open in STM32CUBEIDE > 
