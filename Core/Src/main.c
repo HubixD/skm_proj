@@ -43,7 +43,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
-#define TIMER_DELAY 10
+#define TIMER_DELAY 15
 #define UTIL_DELAY 4
 
 /* USER CODE END PD */

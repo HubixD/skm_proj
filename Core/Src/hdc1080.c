@@ -40,7 +40,7 @@ bool HDC1080_Init(void)
 bool HDC1080_TriggerData(void)
 {
 	uint8_t cmd = 0x00;
-	HAL_I2C_Master_Transmit_IT(&hi2c1, HDC_ADDRESS, &cmd, 1);
+	HAL_I2C_Master_Transmit(&hi2c1, HDC_ADDRESS, (uint8_t*)&cmd, 1, 1);
 	return true;
 }
 
@@ -48,15 +48,20 @@ bool HDC1080_TriggerData(void)
 bool HDC1080_GetData( struct hdc_data_s * data )
 {
 	uint8_t buffer[4] = {0};
+	uint8_t check;
 
 	if (HDC_IsInitialized)
 	{
-		if (HAL_I2C_Master_Receive_IT(&hi2c1, HDC_ADDRESS, buffer, 4) != 4)
+		check = HAL_I2C_Master_Receive(&hi2c1, (uint16_t)HDC_ADDRESS, (uint8_t*)buffer, 4, 100);
+		//if (HAL_I2C_Master_Receive_DMA(&hi2c1, (uint16_t)HDC_ADDRESS, (uint8_t*)buffer, 4) != 4)
+		/*if (HAL_I2C_Master_Receive(&hi2c1, (uint16_t)HDC_ADDRESS, (uint8_t*)buffer, 4, 100) != 4)
 		{
 				data->temperature = 100;
 				data->humidity = 0.0;
 				return false;
-		}
+		} */
+
+
 
 		/* calculate temperature and humidity according to HDC1080 datasheet, page 14 */
 		data->temperature = ( ( (float)( (uint16_t)(buffer[0]<<8) + (uint16_t)buffer[1] ) ) / 65536.0 * 165.0 ) - 40.0;
