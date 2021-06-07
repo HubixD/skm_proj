@@ -43,7 +43,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
-#define TIMER_DELAY 5
+#define TIMER_DELAY 10
 #define UTIL_DELAY 4
 
 /* USER CODE END PD */
@@ -109,14 +109,14 @@ int main(void)
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
 
-<<<<<<< Updated upstream
+
   if(!HDC1080_Init()) HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
   HDC1080_TriggerData();
 
-=======
-  HDC1080_Init();
+
+
   ssd1306_Init();
->>>>>>> Stashed changes
+
   EvTim_stamp_t tim_utils, tim_fetch;
   EvTim_ActivateMs(&tim_fetch, TIMER_DELAY);
   EvTim_ActivateMs(&tim_utils, UTIL_DELAY);
