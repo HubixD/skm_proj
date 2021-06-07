@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "dma.h"
 #include "i2c.h"
 #include "usart.h"
 #include "gpio.h"
@@ -41,6 +42,10 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+
+#define TIMER_DELAY 4
+#define UTIL_DELAY 4
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -99,11 +104,21 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_USART2_UART_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
+
+  HDC1080_Init();
+
   pompa.temperature = 20.5;
   pompa.humidity = 56.7;
+
+
+
+  EvTim_stamp_t tim_utils, tim_fetch;
+  EvTim_ActivateMs(&tim_fetch, TIMER_DELAY);
+  EvTim_ActivateMs(&tim_utils, UTIL_DELAY);
 
   /* USER CODE END 2 */
 
@@ -113,20 +128,30 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
-	  sprintf(lcd_buf,"Temperature:%.1f deg", pompa.temperature);
-	  ssd1306_SetCursor(0, 0);
-	  ssd1306_WriteString(lcd_buf,Font_6x8, White);
-
-	  sprintf(lcd_buf,"Humidity:%.1f $", pompa.humidity);
-	  ssd1306_SetCursor(0, 15);
-	  ssd1306_WriteString(lcd_buf,Font_6x8, White);
-
-
-	  ssd1306_UpdateScreen();
-
-	  HAL_Delay(1000);
-
     /* USER CODE BEGIN 3 */
+
+	  //Runs every UTIL_DELAY[ms]
+	  if(EvTim_getState(&tim_utils) == EVTIM_TIMES_UP)
+	  {
+		  sprintf(lcd_buf,"Temperature:%.1f deg", pompa.temperature);
+		  ssd1306_SetCursor(0, 0);
+		  ssd1306_WriteString(lcd_buf,Font_6x8, White);
+
+		  sprintf(lcd_buf,"Humidity:%.1f $", pompa.humidity);
+		  ssd1306_SetCursor(0, 15);
+		  ssd1306_WriteString(lcd_buf,Font_6x8, White);
+
+
+		  ssd1306_UpdateScreen();
+	  }
+
+	  //Runs every TIMER_DELAY[ms]
+	  if(EvTim_getState(&tim_fetch) == EVTIM_TIMES_UP)
+	  {
+		  HDC1080_GetData(&pompa);
+		  HDC1080_TriggerData();
+		  EvTim_ActivateMs(&tim_fetch, TIMER_DELAY);
+	  }
   }
   /* USER CODE END 3 */
 }

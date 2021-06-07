@@ -24,7 +24,7 @@ struct hdc_data_s {
  *
  * @return true if initialization successfull, false otherwise
 */
-bool HDC_Init(void);
+bool HDC1080_Init(void);
 
 
 /**
@@ -33,23 +33,9 @@ bool HDC_Init(void);
  * @param pointer to /ref structure
  * @return true if data retrieved successfully, false otherwise
 */
-bool HDC_GetData( struct hdc_data_s * data );
+bool HDC1080_GetData( struct hdc_data_s * data );
 
 
-/**
- * Handle heat operations depending on humidity level.
- *
- * @param pointer to /ref structure
- * @return true if operation handled successfuly
-*/
-bool HDC_HeatHandler(uint8_t humidity);
-
-
-/**
- * Reset HDC sensor.
- *
- * @return true if reset was successfull, false otherwise
-*/
-bool HDC_ResetDevice(void);
+bool HDC1080_TriggerData(void);
 
 #endif /* INC_HDC1080_H_ */
