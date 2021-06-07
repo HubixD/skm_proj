@@ -40,6 +40,7 @@ bool HDC1080_Init(void)
 bool HDC1080_TriggerData(void)
 {
 	HAL_I2C_Master_Transmit_IT(&hi2c1, HDC_ADDRESS, 0x00, 1);
+	return true;
 }
 
 
