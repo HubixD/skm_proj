@@ -13,7 +13,7 @@
 
 _BEGIN_STD_C
 
-#include "ssd1306_conf.h"
+#include "ssd1306_conf_template.h"
 
 #if defined(STM32F0)
 #include "stm32f0xx_hal.h"
@@ -89,7 +89,7 @@ extern SPI_HandleTypeDef SSD1306_SPI_PORT;
 
 // SSD1306 OLED height in pixels
 #ifndef SSD1306_HEIGHT
-#define SSD1306_HEIGHT          64
+#define SSD1306_HEIGHT          32
 #endif
 
 // SSD1306 width in pixels

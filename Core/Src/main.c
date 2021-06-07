@@ -27,7 +27,11 @@
 /* USER CODE BEGIN Includes */
 
 #include "evTim.h"
-
+#include "ssd1306.h"
+#include "ssd1306_tests.h"
+#include "hdc1080.h"
+#include <string.h>
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,7 +51,10 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+I2C_HandleTypeDef hi1c1;
 
+char lcd_buf[25];
+int i;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -58,6 +65,9 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+struct hdc_data_s pompa;
+
 
 /* USER CODE END 0 */
 
@@ -77,7 +87,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+  ssd1306_Init();
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -92,6 +102,8 @@ int main(void)
   MX_USART2_UART_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
+  pompa.temperature = 20.5;
+  pompa.humidity = 56.7;
 
   /* USER CODE END 2 */
 
@@ -100,6 +112,19 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+
+	  sprintf(lcd_buf,"Temperature:%.1f deg", pompa.temperature);
+	  ssd1306_SetCursor(0, 0);
+	  ssd1306_WriteString(lcd_buf,Font_6x8, White);
+
+	  sprintf(lcd_buf,"Humidity:%.1f $", pompa.humidity);
+	  ssd1306_SetCursor(0, 15);
+	  ssd1306_WriteString(lcd_buf,Font_6x8, White);
+
+
+	  ssd1306_UpdateScreen();
+
+	  HAL_Delay(1000);
 
     /* USER CODE BEGIN 3 */
   }
