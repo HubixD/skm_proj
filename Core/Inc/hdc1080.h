@@ -5,28 +5,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include "evTim.h"
-
-/*
- * Structure containing HDC data.
-*/
-struct hdc_data_s {
-
-	uint8_t status;
-	float temperature;
-	float humidity;
-};
-
-
-/**
- * Initialize HDC sensor.
- *
- * @return true if initialization successfull, false otherwise
-*/
-bool HDC_Init(void);
-
-
 #include "stm32f3xx_hal.h"
-#include "stdbool.h"
+
 
 /*
  * Structure containing HDC data.
@@ -73,14 +53,3 @@ bool HDC_HeatHandler(uint8_t humidity);
 bool HDC_ResetDevice(void);
 
 #endif /* INC_HDC1080_H_ */
-
-
-/**
- * Reset HDC sensor.
- *
- * @return true if reset was successfull, false otherwise
-*/
-bool HDC_ResetDevice(void);
-
-
-#endif
