@@ -92,7 +92,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-  ssd1306_Init();
+
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -109,9 +109,14 @@ int main(void)
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
 
+<<<<<<< Updated upstream
   if(!HDC1080_Init()) HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
   HDC1080_TriggerData();
 
+=======
+  HDC1080_Init();
+  ssd1306_Init();
+>>>>>>> Stashed changes
   EvTim_stamp_t tim_utils, tim_fetch;
   EvTim_ActivateMs(&tim_fetch, TIMER_DELAY);
   EvTim_ActivateMs(&tim_utils, UTIL_DELAY);
@@ -133,7 +138,7 @@ int main(void)
 		  ssd1306_SetCursor(0, 0);
 		  ssd1306_WriteString(lcd_buf,Font_6x8, White);
 
-		  sprintf(lcd_buf,"Humidity:%.1f $", pompa.humidity);
+		  sprintf(lcd_buf,"Humidity:%.1f %%", pompa.humidity);
 		  ssd1306_SetCursor(0, 15);
 		  ssd1306_WriteString(lcd_buf,Font_6x8, White);
 
