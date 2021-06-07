@@ -36,14 +36,10 @@ bool HDC1080_Init(void)
 	return HDC_IsInitialized;
 }
 
-//TODO divide into trigger / get data
 
 bool HDC1080_TriggerData(void)
 {
-	uint8_t buffer[4] = {0x00, 0x00};
-
 	HAL_I2C_Master_Transmit_IT(&hi2c1, HDC_ADDRESS, 0x00, 1);
-
 }
 
 

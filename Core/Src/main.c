@@ -111,11 +111,6 @@ int main(void)
 
   HDC1080_Init();
 
-  pompa.temperature = 20.5;
-  pompa.humidity = 56.7;
-
-
-
   EvTim_stamp_t tim_utils, tim_fetch;
   EvTim_ActivateMs(&tim_fetch, TIMER_DELAY);
   EvTim_ActivateMs(&tim_utils, UTIL_DELAY);
@@ -143,6 +138,7 @@ int main(void)
 
 
 		  ssd1306_UpdateScreen();
+		  EvTim_ActivateMs(&tim_utils, UTIL_DELAY);
 	  }
 
 	  //Runs every TIMER_DELAY[ms]
