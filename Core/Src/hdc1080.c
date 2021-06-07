@@ -39,7 +39,8 @@ bool HDC1080_Init(void)
 
 bool HDC1080_TriggerData(void)
 {
-	HAL_I2C_Master_Transmit_IT(&hi2c1, HDC_ADDRESS, 0x00, 1);
+	uint8_t cmd = 0x00;
+	HAL_I2C_Master_Transmit_IT(&hi2c1, HDC_ADDRESS, &cmd, 1);
 	return true;
 }
 
@@ -50,7 +51,7 @@ bool HDC1080_GetData( struct hdc_data_s * data )
 
 	if (HDC_IsInitialized)
 	{
-		if (HAL_I2C_Master_Receive_DMA(&hi2c1, HDC_ADDRESS, buffer, 4) != 4)
+		if (HAL_I2C_Master_Receive_IT(&hi2c1, HDC_ADDRESS, buffer, 4) != 4)
 		{
 				data->temperature = 100;
 				data->humidity = 0.0;
