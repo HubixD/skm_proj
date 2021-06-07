@@ -1,8 +1,6 @@
 #include "stm32f3xx_hal.h"
 #include "evTim.h"
-#include "iwdg.h"
 
-#define WDG_REFRESH()           IWDG_Refresh()
 #define EVTIM_GET_COUNTER()     HAL_GetTick()
 
 
@@ -60,6 +58,6 @@ void EvTim_DelayMs(uint32_t timeMs)
 
   while(EvTim_getState(&myTimer) == EVTIM_IN_PROGRESS)
   {
-    WDG_REFRESH();
+
   }
 }
