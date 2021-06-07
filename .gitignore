@@ -22,7 +22,6 @@
 *.la
 *.lo
 /Debug
-/Drivers
 
 # Shared objects (inc. Windows DLLs)
 *.dll

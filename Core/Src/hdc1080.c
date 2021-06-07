@@ -36,6 +36,7 @@ bool HDC1080_Init(void) {
 	return HDC_IsInitialized;
 }
 
+//TODO divide into trigger / get data
 
 bool HDC1080_GetData( struct hdc_data_s * data ) {
 
@@ -46,22 +47,14 @@ bool HDC1080_GetData( struct hdc_data_s * data ) {
 	if (HDC_IsInitialized)
 	{
 			/* write 'measuremenet request' command */
-			ret = I2C_WriteData(HDC_ADDRESS, &cmd, 1);
+			I2C_WriteData(HDC_ADDRESS, &cmd, 1);
+			//HAL_I2C_Master_Transmit_DMA(&hi2c1, DevAddress, pData, Size)
 
-			if (ret == -1)
-			{
-				LOG(" UNABLE 'I2C_WriteData'\r\n");
-			}
-
-			/* wait for conversion to be completed - 18 ms delay */
-			for (int t=250000; t>0; t--) {asm("nop");}
+			/* wait for conversion to be completed - 4.1 ms delay */
+			for (int t=300000; t>0; t--) {asm("nop");} //todo TIMEOUT W/O DELAY
 
 			if (I2C_ReadData( HDC_ADDRESS, buffer, 4) != 4)
 			{
-					if (ret < 0)
-					{
-							LOG(" UNABLE 'I2C_ReadData'\r\n");
-					}
 
 					data->temperature = 100;
 					data->humidity = 0.0;
