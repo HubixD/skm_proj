@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * @file    dma.h
+  * @file    iwdg.h
   * @brief   This file contains all the function prototypes for
-  *          the dma.c file
+  *          the iwdg.c file
   ******************************************************************************
   * @attention
   *
@@ -17,8 +17,8 @@
   ******************************************************************************
   */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __DMA_H__
-#define __DMA_H__
+#ifndef __IWDG_H__
+#define __IWDG_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,17 +27,17 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-/* DMA memory to memory transfer handles -------------------------------------*/
-
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
+
+extern IWDG_HandleTypeDef hiwdg;
 
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
 
-void MX_DMA_Init(void);
+void MX_IWDG_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 
@@ -47,6 +47,6 @@ void MX_DMA_Init(void);
 }
 #endif
 
-#endif /* __DMA_H__ */
+#endif /* __IWDG_H__ */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

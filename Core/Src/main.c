@@ -21,6 +21,7 @@
 #include "main.h"
 #include "dma.h"
 #include "i2c.h"
+#include "iwdg.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -33,6 +34,8 @@
 #include "hdc1080.h"
 #include <string.h>
 #include <stdio.h>
+#include "stdbool.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -43,7 +46,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
-#define TIMER_DELAY 15
+#define TIMER_DELAY 5	//Change if data does not arrive (relay can't switch that fast)
 #define UTIL_DELAY 4
 
 /* USER CODE END PD */
@@ -71,8 +74,15 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-struct hdc_data_s pompa;
+typedef enum
+{
+	SENSOR1,
+	SENSOR2,
+}e_sensor;
 
+extern IWDG_HandleTypeDef hiwdg;
+struct hdc_data_s s_hdcData1, s_hdcData2;
+e_sensor activeSensor;
 
 /* USER CODE END 0 */
 
@@ -107,13 +117,12 @@ int main(void)
   MX_DMA_Init();
   MX_USART2_UART_Init();
   MX_I2C1_Init();
+  MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
 
 
   if(!HDC1080_Init()) HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
   HDC1080_TriggerData();
-
-
 
   ssd1306_Init();
 
@@ -130,18 +139,18 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  HAL_IWDG_Refresh(&hiwdg);
 
 	  //Runs every UTIL_DELAY[ms]
 	  if(EvTim_getState(&tim_utils) == EVTIM_TIMES_UP)
 	  {
-		  sprintf(lcd_buf,"Temperature:%.1f deg", pompa.temperature);
+		  sprintf(lcd_buf,"Temperature:%.1f deg", s_hdcData.temperature);
 		  ssd1306_SetCursor(0, 0);
 		  ssd1306_WriteString(lcd_buf,Font_6x8, White);
 
-		  sprintf(lcd_buf,"Humidity:%.1f %%", pompa.humidity);
+		  sprintf(lcd_buf,"Humidity:%.1f %%", s_hdcData.humidity);
 		  ssd1306_SetCursor(0, 15);
 		  ssd1306_WriteString(lcd_buf,Font_6x8, White);
-
 
 		  ssd1306_UpdateScreen();
 		  EvTim_ActivateMs(&tim_utils, UTIL_DELAY);
@@ -150,8 +159,19 @@ int main(void)
 	  //Runs every TIMER_DELAY[ms]
 	  if(EvTim_getState(&tim_fetch) == EVTIM_TIMES_UP)
 	  {
-		  HDC1080_GetData(&pompa);
+		  if(activeSensor == SENSOR1)
+		  {
+			  HDC_GetData(&s_hdcData1);
+			  activeSensor = SENSOR2;
+		  }
+		  else
+		  {
+			  HDC_GetData(&s_hdcData2);
+			  activeSensor = SENSOR1;
+		  }
 		  HDC1080_TriggerData();
+		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
+
 		  EvTim_ActivateMs(&tim_fetch, TIMER_DELAY);
 	  }
   }
@@ -171,9 +191,10 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_LSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
