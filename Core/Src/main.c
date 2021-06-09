@@ -59,20 +59,9 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-I2C_HandleTypeDef hi1c1;
 
 char lcd_buf[25];
 int i;
-/* USER CODE END PV */
-
-/* Private function prototypes -----------------------------------------------*/
-void SystemClock_Config(void);
-/* USER CODE BEGIN PFP */
-
-/* USER CODE END PFP */
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
 
 typedef enum
 {
@@ -83,6 +72,19 @@ typedef enum
 extern IWDG_HandleTypeDef hiwdg;
 struct hdc_data_s s_hdcData1, s_hdcData2;
 e_sensor activeSensor;
+
+EvTim_stamp_t tim_utils, tim_fetch;
+
+/* USER CODE END PV */
+
+/* Private function prototypes -----------------------------------------------*/
+void SystemClock_Config(void);
+/* USER CODE BEGIN PFP */
+
+/* USER CODE END PFP */
+
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
 
 /* USER CODE END 0 */
 
@@ -120,6 +122,7 @@ int main(void)
   MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
 
+  HAL_IWDG_Refresh(&hiwdg);
 
   if(!HDC1080_Init()) HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
   HDC1080_TriggerData();
@@ -133,7 +136,11 @@ int main(void)
 
   ssd1306_Init();
 
-  EvTim_stamp_t tim_utils, tim_fetch;
+  ssd1306_SetCursor(0, 2);
+  ssd1306_WriteString("SKM PROJECT <3",Font_6x8, White);
+  ssd1306_UpdateScreen();
+  HAL_Delay(900);
+
   EvTim_ActivateMs(&tim_fetch, TIMER_DELAY);
   EvTim_ActivateMs(&tim_utils, UTIL_DELAY);
 
