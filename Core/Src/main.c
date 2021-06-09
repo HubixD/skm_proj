@@ -46,7 +46,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
-#define TIMER_DELAY 5	//Change if data does not arrive (relay can't switch that fast)
+#define TIMER_DELAY 20	//Change if data does not arrive (relay can't switch that fast)
 #define UTIL_DELAY 4
 
 /* USER CODE END PD */
@@ -144,11 +144,11 @@ int main(void)
 	  //Runs every UTIL_DELAY[ms]
 	  if(EvTim_getState(&tim_utils) == EVTIM_TIMES_UP)
 	  {
-		  sprintf(lcd_buf,"Temperature:%.1f deg", s_hdcData.temperature);
+		  sprintf(lcd_buf,"T1:%.1f C T2:%.1f C", s_hdcData1.temperature, s_hdcData2.temperature);
 		  ssd1306_SetCursor(0, 0);
 		  ssd1306_WriteString(lcd_buf,Font_6x8, White);
 
-		  sprintf(lcd_buf,"Humidity:%.1f %%", s_hdcData.humidity);
+		  sprintf(lcd_buf,"H1:%.1f %% H2:%.1f %%", s_hdcData1.humidity,s_hdcData2.humidity);
 		  ssd1306_SetCursor(0, 15);
 		  ssd1306_WriteString(lcd_buf,Font_6x8, White);
 
@@ -161,12 +161,12 @@ int main(void)
 	  {
 		  if(activeSensor == SENSOR1)
 		  {
-			  HDC_GetData(&s_hdcData1);
+			  HDC1080_GetData(&s_hdcData1);
 			  activeSensor = SENSOR2;
 		  }
 		  else
 		  {
-			  HDC_GetData(&s_hdcData2);
+			  HDC1080_GetData(&s_hdcData2);
 			  activeSensor = SENSOR1;
 		  }
 		  HDC1080_TriggerData();
