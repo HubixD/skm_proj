@@ -123,6 +123,13 @@ int main(void)
 
   if(!HDC1080_Init()) HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
   HDC1080_TriggerData();
+  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
+
+  HAL_Delay(10);
+
+  if(!HDC1080_Init()) HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
+  HDC1080_TriggerData();
+
 
   ssd1306_Init();
 
